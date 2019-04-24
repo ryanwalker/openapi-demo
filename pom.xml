@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.kubra.prepay</groupId>
+  <artifactId>openapi-springboot-demo</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>opeanapi-springboot-demo</name>
+  <description>Openapi spec API design and server stub generation</description>
+
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.1.2.RELEASE</version>
+    <relativePath/>
+  </parent>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <java.version>11</java.version>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
+    <maven.javadoc.skip>true</maven.javadoc.skip>
+    <jib-maven-plugin.version>1.0.2</jib-maven-plugin.version>
+    <kubra-nexus.base.url>https://nexus.ifactornotifi.com</kubra-nexus.base.url>
+    <travis.snapshot.policy>daily</travis.snapshot.policy>
+    <spring-cloud.version>Greenwich.RELEASE</spring-cloud.version>
+    <jts2geojson.version>0.13.0</jts2geojson.version>
+    <springfox-swagger-version>2.9.0</springfox-swagger-version>
+    <aws.region.east>us-east-1</aws.region.east>
+    <aws.region.west>us-west-2</aws.region.west>
+  </properties>
+
+  <distributionManagement>
+    <repository>
+      <id>kubra-tempe-nexus</id>
+      <name>Releases</name>
+      <url>${kubra-nexus.base.url}/repository/releases</url>
+    </repository>
+    <snapshotRepository>
+      <id>kubra-tempe-nexus</id>
+      <name>Snapshot</name>
+      <url>${kubra-nexus.base.url}/repository/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
+
+  <repositories>
+    <repository>
+      <id>kubra-tempe-nexus</id>
+      <name>KUBRA Nexus</name>
+      <url>${kubra-nexus.base.url}/repository/public</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>kubra-tempe-nexus</id>
+      <name>KUBRA Nexus</name>
+      <url>${kubra-nexus.base.url}/repository/public</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-dependencies</artifactId>
+        <version>${spring-cloud.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <!-- KUBRA START -->
+<!--    <dependency>-->
+<!--      <groupId>com.kubra</groupId>-->
+<!--      <artifactId>auth0-oidc-resource-server-spring-boot-starter</artifactId>-->
+<!--      <version>2.3.0</version>-->
+<!--    </dependency>-->
+    <!-- KUBRA END -->
+
+    <!-- Spring START -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <version>2.1.4.RELEASE</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter</artifactId>
+    </dependency>
+
+    <!-- Test START -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.swagger</groupId>
+      <artifactId>swagger-annotations</artifactId>
+      <version>1.5.20</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.19.1</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-surefire-provider</artifactId>
+            <version>1.1.0</version>
+          </dependency>
+          <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.1.0</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <configuration>
+          <delimiters>
+            <delimiter>${*}</delimiter>
+            <delimiter>@</delimiter>
+          </delimiters>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <compilerArgs>
+            <!-- org.springframework.core.StandardReflectionParameterNameDiscoverer.java -->
+            <arg>-parameters</arg>
+          </compilerArgs>
+          <source>${maven.compiler.source}</source>
+          <target>${maven.compiler.target}</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>build-info</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <jvmArguments>
+            -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
+          </jvmArguments>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>openapi</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.openapitools</groupId>
+            <artifactId>openapi-generator-maven-plugin</artifactId>
+            <version>3.3.4</version>
+            <executions>
+              <execution>
+                <phase>generate-sources</phase>
+                <goals>
+                  <goal>generate</goal>
+                </goals>
+                <configuration>
+                  <generatorName>spring</generatorName>
+                  <inputSpec>${project.basedir}/openapi/openapi.yml</inputSpec>
+                  <output>${project.basedir}/openapi</output>
+                  <apiPackage>com.kubra.prepay.generated.api</apiPackage>
+                  <modelPackage>com.kubra.prepay.generated.model</modelPackage>
+                  <invokerPackage>com.kubra.prepay.generated.invoker</invokerPackage>
+                  <modelNameSuffix>Dto</modelNameSuffix>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>3.1.0</version>
+            <executions>
+              <execution>
+                <id>copy-resources</id>
+                <phase>generate-sources</phase>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>${basedir}/src/main/java/com/kubra/prepay/generated</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>openapi/src/main/java/com/kubra/prepay/generated</directory>
+                    </resource>
+                  </resources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+</project>

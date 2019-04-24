@@ -1,0 +1,12 @@
+# Dirs
+src/**/generated/invoker/
+src/**/openapitools/
+src/main/java/org/**
+src/**/resources/
+
+# Files
+src/**/*ApiController.java
+application.properties
+pom.xml
+README.md
+

@@ -1,0 +1,85 @@
+openapi: 3.0.0
+
+servers:
+  - url: https://prepay-api.kubra.io/v1
+    description: KUBRA PRE-PAY ACCOUNTS API
+  - url: http://localhost:8080/v1
+    description: Development PRE-PAY API
+
+info:
+  description: Pre-Pay Accounts API
+  version: 0.1.0
+  title: PrePay API
+
+tags:
+  - name: accounts
+    description: The customer's account
+
+paths:
+  /accounts:
+    post:
+      tags:
+        - accounts
+      summary: Register an account
+      description: Register an account
+      operationId: registerAccount
+      requestBody:
+        description: Account request body
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+
+components:
+  schemas:
+    Account:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Internal account Id
+        connectionStatus:
+          $ref: '#/components/schemas/AccountStatus'
+        balance:
+          type: number
+          format: double
+        contactInfo:
+          type: array
+          items:
+            $ref: '#/components/schemas/Contact'
+        accountType:
+          type: string
+
+    AccountStatus:
+      type: string
+      enum:
+        - CONNECTED
+        - PAUSED
+        - DISCONNECTED
+
+    Contact:
+      type: object
+      properties:
+        isPrimary:
+          type: boolean
+        name:
+          type: string
+        contactType:
+          type: string
+          enum:
+            - EMAIL
+            - SMS
+        value:
+          type: string
+
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
